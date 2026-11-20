@@ -18,15 +18,15 @@ Firmware, release files and BLE OTA channel for the **LilyGO T-Echo Plus**
 
 | Firmware | UF2 (USB drag & drop) | DFU ZIP (Serial / BLE OTA) |
 |---|---|---|
-| Full (F4LEK/EA2OY base) | [Full-b116.uf2](firmware/APRS-TH-TEcho-Plus-Full-b116.uf2) | [Full-b116-dfu.zip](firmware/APRS-TH-TEcho-Plus-Full-b116-dfu.zip) |
+| Full (F4LEK/EA2OY base) | [Full-b117.uf2](firmware/APRS-TH-TEcho-Plus-Full-b117.uf2) | [Full-b117-dfu.zip](firmware/APRS-TH-TEcho-Plus-Full-b117-dfu.zip) |
 | Minimal (ESP32APRS_LoRa port) | [Min-0.1.1.uf2](firmware/APRS-TH-TEcho-Plus-Min-0.1.1.uf2) | [Min-0.1.1-dfu.zip](firmware/APRS-TH-TEcho-Plus-Min-0.1.1-dfu.zip) |
 
 SHA256:
 
 ```
-4f00f2b6855cb2e5fb37c88ed89ca581fb48cd69c0437a17a4aa9c595922b981  Full-b116-dfu.zip
+c04c49be652eca3af388d289480d0dbc9a6d2a5fa9fadf38eaf2de83b7e960ad  Full-b117-dfu.zip
 3b572e9feddb527bc7201992e743c8946a26c37638ec418260595004d1e30cb8  Min-0.1.1-dfu.zip
-474fae3c0317491beb56d821c7a0a36c35c2f38f7c008b28380af95fbcf2d669  Full-b116.uf2
+b503053df0e8aab3826f9f64f77d9c7436c23d6a88b9ec9ae5d432ef45750b2d  Full-b117.uf2
 5ec789c5f190e165d26873f9a15a3424e2d3433291933398e68cd8c506b489c8  Min-0.1.1.uf2
 ```
 
@@ -67,7 +67,7 @@ Use the `.zip` package (not `.uf2`), and set Packet Receipt Notification
 
 ```bash
 python3 -m pip install --user adafruit-nrfutil
-adafruit-nrfutil dfu serial -pkg APRS-TH-TEcho-Plus-Full-b116-dfu.zip -p /dev/ttyACM0 -b 115200
+adafruit-nrfutil dfu serial -pkg APRS-TH-TEcho-Plus-Full-b117-dfu.zip -p /dev/ttyACM0 -b 115200
 ```
 
 ### 4. SWD / J-Link recovery
