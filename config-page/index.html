@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>APRS LoRa — ตั้งค่าผ่าน Bluetooth</title>
+<link rel="stylesheet" href="./config.css" />
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span> APRS LoRa · T-Echo Plus</div>
+    <nav>
+      <a href="/">หน้าแรก</a>
+      <a href="/update/">อัปเดต BLE</a>
+      <a href="https://github.com/petchin/aprs-lora-techo" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="badge">BLE Config · E23BMY-12</div>
+    <h1>ตั้งค่าและส่งข้อความ<br /><span>ผ่าน Bluetooth</span></h1>
+    <p class="lead">
+      แก้ status, comment, callsign และข้อความด่วน พร้อมดู RSSI/SNR และค่าจาก BME280
+      โดยไม่ต้องเสียบสาย USB
+    </p>
+    <div class="actions">
+      <button id="connect">เชื่อมต่อ T-Echo</button>
+      <button id="read" class="alt" disabled>อ่านค่าจากเครื่อง</button>
+    </div>
+    <div id="conn" class="conn">ยังไม่ได้เชื่อมต่อ</div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>ข้อมูลสถานี</h2>
+      <label>Status <span class="hint">สูงสุด ~63 ตัวอักษร ASCII</span>
+        <input id="status" maxlength="63" placeholder="เช่น APRS LoRa Thailand / E23BMY" />
+      </label>
+      <label>Comment (beacon) <span class="hint">สูงสุด ~63 ตัวอักษร ASCII</span>
+        <input id="comment" maxlength="63" placeholder="เช่น LoRa APRS T-Echo Plus 433.775" />
+      </label>
+      <label>ข้อความด่วน (Quick message) <span class="hint">สูงสุด ~47 ตัวอักษร</span>
+        <input id="msgText" maxlength="47" placeholder="ข้อความสั้น ๆ สำหรับเมนู" />
+      </label>
+      <label>Callsign
+        <input id="callsign" maxlength="15" placeholder="E23BMY-12" />
+      </label>
+      <button id="save">บันทึกการตั้งค่า</button>
+    </div>
+
+    <div class="card">
+      <h2>สถานะเครื่อง</h2>
+      <table class="stats">
+        <tr><td>Firmware</td><td id="fw">-</td></tr>
+        <tr><td>RSSI / SNR</td><td id="rssi">-</td></tr>
+        <tr><td>TX / RX</td><td id="counts">-</td></tr>
+        <tr><td>BME280</td><td id="wx">-</td></tr>
+        <tr><td>อุณหภูมิ</td><td id="temp">-</td></tr>
+        <tr><td>ความชื้น</td><td id="hum">-</td></tr>
+        <tr><td>ความกดอากาศ</td><td id="press">-</td></tr>
+        <tr><td>แบตเตอรี่</td><td id="bat">-</td></tr>
+      </table>
+      <button id="statusBtn" class="alt" disabled>อ่านสถานะ</button>
+      <button id="beaconBtn" class="alt" disabled>ส่ง Beacon</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ส่งข้อความ APRS</h2>
+    <div class="sendrow">
+      <input id="msgTo" placeholder="ปลายทาง เช่น E29ABC-7 (เว้นว่าง = สถานีล่าสุดที่ได้ยิน)" />
+      <input id="msgBody" placeholder="ข้อความ" maxlength="67" />
+      <button id="sendMsg" disabled>ส่ง</button>
+    </div>
+    <p class="hint">ข้อความ APRS จำกัดความยาวและต้องเป็น ASCII; การส่งต้องมี callsign/passcode ที่ถูกต้องตามเงื่อนไขของเครือข่าย</p>
+  </section>
+
+  <section class="card">
+    <h2>Log</h2>
+    <pre id="log" class="log"></pre>
+  </section>
+
+  <section class="card">
+    <h2>ก่อนเชื่อมต่อ</h2>
+    <ul>
+      <li>เปิด Bluetooth ใน Full firmware ครั้งแรก: เมนู <code>Bluetooth → Bluetooth</code> = เปิด</li>
+      <li>PIN ค่าเริ่มต้น <code>123456</code> (แก้ได้ที่ <code>Bluetooth → PIN BT</code>)</li>
+      <li>ถ้าอ่าน/เขียนไม่ได้ ให้ Pair อุปกรณ์ใน Bluetooth ของระบบก่อน (PIN เดียวกัน)</li>
+      <li>ใช้ Chrome/Edge บน Android หรือคอมพิวเตอร์; <b>iOS Safari ใช้ไม่ได้</b></li>
+      <li>ระยะห่างไม่เกิน ~10 เมตร และอุปกรณ์ต้องยังไม่เชื่อมกับแอปอื่น</li>
+      <li>ค่า status/comment เป็น ASCII (อักษรไทยจะถูกแทนที่ด้วย <code>.</code>)</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap">
+  Firmware GPL-3.0 · BLE config service ของ F4LEK/EA2OY · เครดิต: LilyGO, Adafruit, RadioLib, BME280
+</footer>
+
+<script src="./config.js"></script>
+</body>
+</html>
