@@ -4,8 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0b0f14" />
-  <title>APRS LoRa — T-Echo Plus BLE Updater</title>
-  <link rel="stylesheet" href="./src/style.css" />
+  <title>APRS LoRa T-Echo Plus — BLE Tools</title>
 </head>
 <body>
   <header>
@@ -13,6 +12,7 @@
       <div class="brand"><span class="dot"></span> APRS LoRa · T-Echo Plus</div>
       <nav>
         <a href="/">หน้าแรก</a>
+        <a href="/tools/">BLE Tools</a>
         <a href="https://github.com/petchin/aprs-lora-techo" target="_blank" rel="noopener">GitHub</a>
       </nav>
     </div>
@@ -20,62 +20,169 @@
 
   <main class="wrap">
     <section class="hero">
-      <div class="badge">BLE OTA · Web Bluetooth · E23BMY-12</div>
-      <h1>อัปเดตเฟิร์มแวร์<br /><span>ผ่าน Bluetooth</span></h1>
+      <div class="badge">BLE Tools · Web Bluetooth · E23BMY-12</div>
+      <h1>จัดการ T-Echo Plus<br /><span>ผ่าน Bluetooth</span></h1>
       <p class="lead">
-        ไม่ต้องเสียบสายหลังติดตั้งครั้งแรก — ทำให้บอร์ดเข้าสู่โหมด OTA แล้วกดอัปเดตจากหน้านี้
-        ระบบจะดึงไฟล์ล่าสุดจาก GitHub ของ <code>petchin/aprs-lora-techo</code> และส่งผ่าน Bluetooth
+        หน้าเดียวรวมสองเครื่องมือ: <b>อัปเดตเฟิร์มแวร์ (OTA)</b> และ <b>ตั้งค่า/ส่งข้อความ</b>
+        พร้อม RSSI, BME280 และสถานะแบตเตอรี่
       </p>
       <div id="version" class="version">กำลังตรวจเวอร์ชัน…</div>
     </section>
 
-    <section class="grid">
-      <div class="card">
-        <h2>1. ทำให้บอร์ดเข้าสู่ OTA</h2>
-        <ul>
-          <li><b>Full:</b> เมนู <code>Settings → BLE OTA</code> กดยืนยัน 2 ครั้ง</li>
-          <li><b>Minimal:</b> กดปุ่ม <b>User</b> ค้างไว้ <b>3 วินาที</b> (หรือสั่ง <code>ota</code> ทาง USB)</li>
-          <li>บอร์ดจะรีสตาร์ทและโฆษณาชื่อ <code>AdaDFU</code></li>
-        </ul>
-        <p class="hint">ถ้าไม่เห็นอุปกรณ์ ให้กด Reset 2 ครั้งเพื่อเข้า UF2/DFU แล้วใช้สาย USB แทน</p>
-      </div>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="update" role="tab" aria-selected="true">อัปเดต Firmware</button>
+      <button class="tab" data-tab="config" role="tab" aria-selected="false">ตั้งค่า / ข้อความ</button>
+    </div>
 
-      <div class="card">
-        <h2>2. เลือกเฟิร์มแวร์</h2>
-        <div id="devices" class="devices">
-          <div class="loading">กำลังโหลดรายการ…</div>
+    <section id="panel-update" class="panel" role="tabpanel">
+      <div class="grid">
+        <div class="card">
+          <h2>1. ทำให้บอร์ดเข้าสู่ OTA</h2>
+          <ul>
+            <li><b>Full:</b> เมนู <code>Settings → BLE OTA</code> กดยืนยัน 2 ครั้ง</li>
+            <li><b>Minimal:</b> กดปุ่ม <b>User</b> ค้างไว้ <b>3 วินาที</b> (หรือสั่ง <code>ota</code> ทาง USB)</li>
+            <li>บอร์ดจะรีสตาร์ทและโฆษณาชื่อ <code>AdaDFU</code></li>
+          </ul>
+          <p class="hint">ถ้าไม่เห็นอุปกรณ์ ให้กด Reset 2 ครั้งเพื่อเข้า UF2/DFU แล้วใช้สาย USB แทน</p>
         </div>
-        <div id="status" class="status">กำลังเตรียม…</div>
-        <div class="bar"><div id="bar"></div></div>
-        <div id="progress" class="progress"></div>
+
+        <div class="card">
+          <h2>2. เลือกเฟิร์มแวร์</h2>
+          <div id="devices" class="devices">
+            <div class="loading">กำลังโหลดรายการ…</div>
+          </div>
+          <div id="status" class="status">กำลังเตรียม…</div>
+          <div class="bar"><div id="bar"></div></div>
+          <div id="progress" class="progress"></div>
+        </div>
+      </div>
+
+      <section class="card">
+        <h2>Log การอัปเดต</h2>
+        <pre id="log" class="log"></pre>
+      </section>
+
+      <div class="grid">
+        <div class="card">
+          <h2>ข้อควรระวัง</h2>
+          <ul>
+            <li>ใช้ <b>Chrome หรือ Edge</b> ที่รองรับ Web Bluetooth — <b>iOS Safari ใช้ไม่ได้</b></li>
+            <li>แบตเตอรี่ควรเกิน 50% และอยู่ใกล้บอร์ดระหว่างอัปเดต</li>
+            <li>ห้ามปิดหน้า/ออกจากระยะจนถึง 100%</li>
+            <li>ถ้าล้มเหลว ให้กลับไปใช้ USB UF2 หรือ Serial DFU เพื่อกู้</li>
+            <li>ควรสำรอง config ผ่านแท็บ “ตั้งค่า / ข้อความ” ก่อนอัปเดต</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>แอปทางเลือก</h2>
+          <p>ถ้าไม่สะดวกใช้เว็บ สามารถใช้แอปที่รองรับ Nordic Secure DFU กับไฟล์ <code>.zip</code>:</p>
+          <ul>
+            <li><b>nRF Connect Device Manager</b> (Nordic)</li>
+            <li><b>Adafruit Bluefruit Connect</b></li>
+            <li><b>nRF Toolbox</b></li>
+          </ul>
+          <p class="hint">ตั้ง PRN ≤ 8 ในแอปถ้ามีตัวเลือก</p>
+        </div>
       </div>
     </section>
 
-    <section class="card logcard">
-      <h2>Log</h2>
-      <pre id="log" class="log"></pre>
-    </section>
+    <section id="panel-config" class="panel hidden" role="tabpanel">
+      <div class="grid">
+        <div class="card">
+          <h2>ตั้งค่าสถานี</h2>
+          <label>Status <span class="hint">สูงสุด ~63 ตัวอักษร ASCII</span>
+            <input id="cfgStatus" maxlength="63" placeholder="เช่น APRS LoRa Thailand / E23BMY" />
+          </label>
+          <label>Comment (beacon) <span class="hint">สูงสุด ~63 ตัวอักษร ASCII</span>
+            <input id="cfgComment" maxlength="63" placeholder="เช่น LoRa APRS T-Echo Plus 433.775" />
+          </label>
+          <label>ข้อความด่วน (Quick message) <span class="hint">สูงสุด ~47 ตัวอักษร</span>
+            <input id="cfgMsgText" maxlength="47" placeholder="ข้อความสั้น ๆ สำหรับเมนู" />
+          </label>
+          <label>Callsign
+            <input id="cfgCallsign" maxlength="15" placeholder="E23BMY-12" />
+          </label>
+          <label class="check"><input type="checkbox" id="cfgShowRssi" /> แสดง RSSI บนหน้าจอ Home</label>
+          <label class="check"><input type="checkbox" id="cfgWxSensor" /> เปิด BME280 / ส่งข้อมูลอากาศ (WX)</label>
+          <label class="check"><input type="checkbox" id="cfgBattTelemetry" /> ส่ง telemetry แบตเตอรี่ขึ้น APRS</label>
+          <div class="two">
+            <label>WX ทุก (นาที) <input id="cfgWxInterval" type="number" min="0" max="720" step="15" /></label>
+            <label>Telemetry ทุก (นาที) <input id="cfgTelemetryInterval" type="number" min="0" max="720" step="15" /></label>
+          </div>
+          <button id="cfgSave">บันทึกการตั้งค่า</button>
+        </div>
 
-    <section class="grid">
-      <div class="card">
-        <h2>ข้อควรระวัง</h2>
-        <ul>
-          <li>ใช้ <b>Chrome หรือ Edge</b> ที่รองรับ Web Bluetooth (Android/คอมพิวเตอร์) — <b>iOS Safari ใช้ไม่ได้</b></li>
-          <li>แบตเตอรี่ควรเกิน 50% และอยู่ใกล้บอร์ดระหว่างอัปเดต</li>
-          <li>ห้ามปิดหน้า/ออกจากระยะจนถึง 100%</li>
-          <li>ถ้าล้มเหลว ให้กลับไปใช้ USB UF2 หรือ Serial DFU เพื่อกู้</li>
-        </ul>
+        <div class="card">
+          <h2>สถานะเครื่อง</h2>
+          <table class="stats">
+            <tr><td>Firmware</td><td id="cfgFw">-</td></tr>
+            <tr><td>RSSI / SNR</td><td id="cfgRssi">-</td></tr>
+            <tr><td>TX / RX</td><td id="cfgCounts">-</td></tr>
+            <tr><td>BME280</td><td id="cfgWx">-</td></tr>
+            <tr><td>อุณหภูมิ</td><td id="cfgTemp">-</td></tr>
+            <tr><td>ความชื้น</td><td id="cfgHum">-</td></tr>
+            <tr><td>ความกดอากาศ</td><td id="cfgPress">-</td></tr>
+            <tr><td>แบตเตอรี่</td><td id="cfgBat">-</td></tr>
+            <tr><td>แรงดันแบต</td><td id="cfgBatV">-</td></tr>
+            <tr><td>สถานะแบต</td><td id="cfgBatState">-</td></tr>
+          </table>
+          <div class="threshold">
+            <b>เกณฑ์ประมาณ:</b> ≥75% ดี · 50–74% ปานกลาง · 25–49% เริ่มอ่อน · 5–24% อ่อน · &lt;5% ควรชาร์จ<br>
+            <span class="hint">LiPo 1S; % มาจาก curva ของ firmware (cutoff 3.2 V)</span>
+          </div>
+          <button id="cfgStatusBtn" class="alt" disabled>อ่านสถานะ</button>
+          <button id="cfgBeacon" class="alt" disabled>ส่ง Beacon</button>
+        </div>
       </div>
+
       <div class="card">
-        <h2>แอปทางเลือก</h2>
-        <p>ถ้าไม่สะดวกใช้เว็บ สามารถใช้แอปที่รองรับ Nordic Secure DFU กับไฟล์ <code>.zip</code>:</p>
-        <ul>
-          <li><b>nRF Connect Device Manager</b> (Nordic) — Android/iOS</li>
-          <li><b>Adafruit Bluefruit Connect</b> — Android/iOS</li>
-          <li><b>nRF Toolbox</b> — Android/iOS</li>
-        </ul>
-        <p class="hint">ตั้ง PRN ≤ 8 ในแอปถ้ามีตัวเลือก</p>
+        <h2>เชื่อมต่ออุปกรณ์</h2>
+        <div class="actions">
+          <button id="cfgConnect">เชื่อมต่อ T-Echo</button>
+          <button id="cfgRead" class="alt" disabled>อ่านค่าจากเครื่อง</button>
+        </div>
+        <div id="cfgConn" class="conn">ยังไม่ได้เชื่อมต่อ</div>
+        <p class="hint">เปิด Bluetooth ในเมนู Full ครั้งแรก: <code>Bluetooth → Bluetooth = เปิด</code>; PIN เริ่มต้น <code>123456</code></p>
       </div>
+
+      <section class="card">
+        <h2>ส่งข้อความ APRS</h2>
+        <div class="sendrow">
+          <input id="cfgMsgTo" placeholder="ปลายทาง เช่น E29ABC-7 (เว้นว่าง = สถานีล่าสุด)" />
+          <input id="cfgMsgBody" placeholder="ข้อความ" maxlength="67" />
+          <button id="cfgSendMsg" disabled>ส่ง</button>
+        </div>
+        <p class="hint">APRS message ต้องเป็น ASCII; การส่งต้องมี callsign/passcode ที่ถูกต้องตามเครือข่าย</p>
+      </section>
+
+      <section class="card">
+        <h2>Remote control และ Backup</h2>
+        <label class="check"><input type="checkbox" id="cfgRemote" /> เปิดรับคำสั่งระยะไกลผ่าน APRS message</label>
+        <label>Managers (callsign ที่อนุญาต คั่นด้วยช่องว่าง)
+          <input id="cfgManagers" placeholder="E23BMY E29ABC-7" />
+        </label>
+        <p class="hint">ถ้าเปิด: ส่ง APRS message ไปที่ E23BMY-12 เนื้อหา <code>reboot confirm</code> จาก callsign ในรายการ เพื่อรีสตาร์ท</p>
+        <div class="actions">
+          <button id="cfgExport" class="alt">ดาวน์โหลด config (สำรองก่อน update)</button>
+          <label class="filebtn">โหลด config<input type="file" id="cfgImport" accept="application/json" /></label>
+          <button id="cfgReboot" class="alt">รีสตาร์ทเครื่อง</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Log การตั้งค่า</h2>
+        <pre id="cfgLog" class="log"></pre>
+      </section>
+
+      <section class="card">
+        <h2>ก่อนเชื่อมต่อ</h2>
+        <ul>
+          <li>เปิด Bluetooth ใน Full firmware: เมนู <code>Bluetooth → Bluetooth</code> = เปิด</li>
+          <li>PIN ค่าเริ่มต้น <code>123456</code>; ถ้าอ่าน/เขียนไม่ได้ ให้ Pair ใน Bluetooth ของระบบก่อน</li>
+          <li>ใช้ Chrome/Edge (Android/คอมพิวเตอร์); <b>iOS Safari ใช้ไม่ได้</b></li>
+          <li>Status/Comment เป็น ASCII (อักษรไทยจะถูกแทนที่ด้วย <code>.</code>)</li>
+        </ul>
+      </section>
     </section>
   </main>
 
