@@ -3,7 +3,7 @@
   "version": "1.0.0-b116",
   "released": "2026-11-20",
   "repo": "petchin/aprs-lora-techo",
-  "notes": "BLE OTA enabled (Full menu + Minimal long-press), callsign E23BMY-12, 433.775 MHz",
+  "notes": "BLE OTA + BLE config, RSSI on screen, BME280 weather, callsign E23BMY-12, 433.775 MHz",
   "full": {
     "label": "Full (F4LEK/EA2OY base)",
     "version": "1.0alpha-b116",
