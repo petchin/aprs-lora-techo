@@ -42,7 +42,7 @@ fd8ce5333d8c4df3f774385f4a6b9bb58cd998ad8eaf1eee9c86cc276d5be890  Full-b115-dfu.
 2. On a phone/computer with Bluetooth, open
    **<https://aprs-lora.pizones.com/update/>** (Chrome/Edge, Web Bluetooth).
 3. Choose Full or Minimal → **Connect & Update** → select the device
-   (`DfuTarg` / `NICENANO`) → wait for 100%.
+   (`AdaDFU`) → wait for 100%.
 4. The board reboots into the new firmware.
 
 The web updater fetches the latest `latest.json` and the `.zip` from this
