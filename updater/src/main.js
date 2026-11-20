@@ -105,6 +105,15 @@ async function update(deviceInfo) {
   progressEl.textContent = '';
   devicesEl.querySelectorAll('button').forEach(b => (b.disabled = true));
   try {
+    // Web Bluetooth ต้องเรียกจาก user gesture โดยตรง: เลือกอุปกรณ์ก่อนดาวน์โหลด
+    const DFU_SERVICE = '0000fe59-0000-1000-8000-00805f9b34fb';
+    setStatus('เลือกอุปกรณ์ DFU ในหน้าต่าง Bluetooth…');
+    const device = await navigator.bluetooth.requestDevice({
+      filters: [{ services: [DFU_SERVICE] }, { namePrefix: 'AdaDFU' }],
+      optionalServices: [DFU_SERVICE],
+    });
+    log('เลือกอุปกรณ์: ' + (device.name || device.id));
+
     setStatus('ดาวน์โหลดและตรวจแพ็กเกจ…');
     const zipBuf = await fetchPackage(deviceInfo.dfu);
     const actual = await sha256(zipBuf);
@@ -115,17 +124,9 @@ async function update(deviceInfo) {
     const { init, image } = await parsePackage(zipBuf);
     log(`แพ็กเกจพร้อม: init ${init.byteLength} B, image ${image.byteLength} B`);
 
-    setStatus('เลือกอุปกรณ์ DFU ในหน้าต่าง Bluetooth…');
     const dfu = new SecureDfu(CRC32.buf);
     dfu.addEventListener('log', e => log(e.message));
     dfu.addEventListener('progress', e => setProgress(e.currentBytes, e.totalBytes));
-
-    const DFU_SERVICE = '0000fe59-0000-1000-8000-00805f9b34fb';
-    const device = await navigator.bluetooth.requestDevice({
-      filters: [{ services: [DFU_SERVICE] }, { namePrefix: 'AdaDFU' }],
-      optionalServices: [DFU_SERVICE],
-    });
-    log('เลือกอุปกรณ์: ' + (device.name || device.id));
 
     setStatus('กำลังอัปเดต — ห้ามปิดหน้าหรือออกจากระยะ');
     await dfu.update(device, init, image);
