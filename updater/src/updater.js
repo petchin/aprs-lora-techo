@@ -40,7 +40,7 @@ export function initUpdater() {
       const r = await fetch(MANIFEST_URL + '?t=' + Date.now(), { cache: 'no-store' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       manifest = await r.json();
-      versionEl.textContent = `เวอร์ชันล่าสุด: ${manifest.version} (${manifest.released})`;
+      versionEl.textContent = `Firmware ล่าสุด: ${manifest.version} (${manifest.released})`;
       renderDevices();
       setStatus('พร้อมอัปเดต — เลือกเวอร์ชันแล้วกด Connect & Update', 'ok');
     } catch (e) {
