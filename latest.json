@@ -1,15 +1,15 @@
 {
   "schema": 1,
-  "version": "1.0.0-b117",
+  "version": "1.0.0-b118",
   "released": "2026-11-20",
   "repo": "petchin/aprs-lora-techo",
-  "notes": "BLE OTA + BLE config, RSSI on screen, BME280 weather, callsign E23BMY-12, 433.775 MHz",
+  "notes": "BLE Tools (update+config), IGate host / Digi / Auto, RSSI, BME280, battery",
   "full": {
     "label": "Full (F4LEK/EA2OY base)",
-    "version": "1.0alpha-b117",
-    "dfu": "https://raw.githubusercontent.com/petchin/aprs-lora-techo/main/firmware/APRS-TH-TEcho-Plus-Full-b117-dfu.zip",
-    "uf2": "https://raw.githubusercontent.com/petchin/aprs-lora-techo/main/firmware/APRS-TH-TEcho-Plus-Full-b117.uf2",
-    "sha256": "c04c49be652eca3af388d289480d0dbc9a6d2a5fa9fadf38eaf2de83b7e960ad"
+    "version": "1.0alpha-b118",
+    "dfu": "https://raw.githubusercontent.com/petchin/aprs-lora-techo/main/firmware/APRS-TH-TEcho-Plus-Full-b118-dfu.zip",
+    "uf2": "https://raw.githubusercontent.com/petchin/aprs-lora-techo/main/firmware/APRS-TH-TEcho-Plus-Full-b118.uf2",
+    "sha256": "760dbb5723029e2d362a4e9df0b49ca354d4bf2d344d7ad7efac8fe72043b95c"
   },
   "min": {
     "label": "Minimal (ESP32APRS_LoRa port)",

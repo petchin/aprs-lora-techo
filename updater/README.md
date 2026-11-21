@@ -2,9 +2,9 @@
 
 Single page with two tabs:
 
-- **Update firmware** — Nordic Secure DFU over Web Bluetooth (`.zip` from latest.json)
+- **Update firmware** — Nordic Secure DFU over Web Bluetooth
 - **Config / messages** — status, comment, callsign, sensors, battery telemetry,
-  RSSI toggle, remote-control ACL, config backup/import, reboot
+  RSSI toggle, IGate/Digi/Auto modes, remote-control ACL, backup/import, reboot
 
 Fetches `latest.json` from this repository. Requires Chrome/Edge
 (Android/desktop); iOS Safari does not support Web Bluetooth.

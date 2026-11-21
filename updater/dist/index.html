@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0b0f14" />
   <title>APRS LoRa T-Echo Plus — BLE Tools</title>
-  <script type="module" crossorigin src="./assets/index-GPjDS0pJ.js"></script>
+  <script type="module" crossorigin src="./assets/index-BIEpp6OT.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-X0uD0995.css">
 </head>
 <body>
@@ -146,6 +146,21 @@
         <div id="cfgConn" class="conn">ยังไม่ได้เชื่อมต่อ</div>
         <p class="hint">เปิด Bluetooth ในเมนู Full ครั้งแรก: <code>Bluetooth → Bluetooth = เปิด</code>; PIN เริ่มต้น <code>123456</code></p>
       </div>
+
+      <section class="card">
+        <h2>โหมด IGate / Digipeater</h2>
+        <label class="check"><input type="checkbox" id="cfgIgate" /> เปิด IGate ผ่าน host (USB/BLE KISS)</label>
+        <label class="check"><input type="checkbox" id="cfgDigi" /> เปิด Digipeater (WIDE1-1 + WIDE2)</label>
+        <label class="check"><input type="checkbox" id="cfgDigiAuto" /> Digi อัตโนมัติเมื่อไม่มี host/iGate</label>
+        <p class="hint">
+          T-Echo ไม่มี WiFi: IGate ต้องต่อ host ที่มีเน็ต (Raspberry Pi/PC/มือถือ) ผ่าน USB/BLE KISS
+          แล้วให้ host รัน aprx/APRS-IS — อุปกรณ์ทำหน้าที่เป็น LoRa TNC
+        </p>
+        <p class="hint">
+          Auto ใช้ “มี host ต่ออยู่” เป็นตัวแทนของ iGate; ถ้า host ต่อแต่เน็ตขาด อุปกรณ์ตรวจไม่ได้
+          ให้เลือก Digi เปิดตลอดหากต้องการ guaranteed
+        </p>
+      </section>
 
       <section class="card">
         <h2>ส่งข้อความ APRS</h2>

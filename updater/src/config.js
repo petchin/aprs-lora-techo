@@ -57,6 +57,9 @@ export function initConfig() {
     if (cfg.managers !== undefined) $('cfgManagers').value = cfg.managers;
     if (cfg.wxIntervalMin !== undefined) $('cfgWxInterval').value = cfg.wxIntervalMin;
     if (cfg.telemetryIntervalMin !== undefined) $('cfgTelemetryInterval').value = cfg.telemetryIntervalMin;
+    if (cfg.tncProtocol !== undefined) $('cfgIgate').checked = (cfg.tncProtocol === 2);
+    if (cfg.digiMode !== undefined) $('cfgDigi').checked = (cfg.digiMode > 0);
+    if (cfg.digiAuto !== undefined) $('cfgDigiAuto').checked = !!cfg.digiAuto;
   }
 
   function batteryLabel(pct) {
@@ -164,6 +167,9 @@ export function initConfig() {
       sendBatteryTelemetry: $('cfgBattTelemetry').checked,
       remoteEnabled: $('cfgRemote').checked,
       managers: $('cfgManagers').value.trim(),
+      tncProtocol: $('cfgIgate').checked ? 2 : 0,
+      digiMode: $('cfgDigi').checked ? 2 : 0,
+      digiAuto: $('cfgDigiAuto').checked,
     };
     const cs = $('cfgCallsign').value.trim();
     if (cs) cfg.callsign = cs;
